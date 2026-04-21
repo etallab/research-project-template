@@ -163,7 +163,7 @@ def write_table(styler: style.Styler,
                 midrules: Optional[Union[Rule_Specifier], List[Rule_Specifier]] = None,
                 colsep: Optional[str] = None,
                 standalone: Union[str, bool] = False,
-                siunitx: bool = False,
+                siunitx: Optional[Union[str, bool]] = False,
                 **kwargs) -> str:
     output_file_dir = resolve_directory(DirType.TABLES)
     output_file_dir.mkdir(mode=0o755, parents=True, exist_ok=True)
@@ -209,8 +209,8 @@ def write_table(styler: style.Styler,
                 f.write("\\robustify\\bfseries\n")
 
             f.write("\\begin{document}\n")
-            if siunitx:
-                f.write("\\sisetup{detect-all = true}\n")
+            if isinstance(siunitx, str):
+                f.write("\\sisetup{%s}\n" % siunitx)
 
         if colsep:
             f.write('\\newcommand{\\oldtablcolsep' + col_sep_prefix + "}{\\tabcolsep}\n")
