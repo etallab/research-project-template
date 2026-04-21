@@ -36,13 +36,15 @@ def get_styler(df: Union[pd.DataFrame, pd.Series],
 
 def highlight_cols(styler: style.Styler) -> style.Styler:
     # TODO: Document
-    return styler.apply_index(lambda x: 'texbf:--rwrap;', axis='columns') \
+    return styler.map_index(lambda x: 'textbf:--rwrap;', axis='columns') \
                  .hide(names=True, axis='columns')
+
 
 def highlight_rows(styler: style.Styler) -> style.Styler:
     # TODO: Document
-    return styler.apply_index(lambda x: 'texbf:--rwrap;', axis='index') \
+    return styler.map_index(lambda x: 'textbf:--rwrap;', axis='index') \
                  .hide(names=True, axis='index')
+
 
 RuleLineIndex = int
 RuleWidth = str
