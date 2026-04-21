@@ -4,8 +4,10 @@
 import pandas as pd
 import pandas.io.formats.style as style
 
-import os, sys, re
-from typing import Optional
+import os
+import sys
+import re
+from typing import Optional, Union, List, Tuple
 
 from .utilities import resolve_directory, DirType
 
