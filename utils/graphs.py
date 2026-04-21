@@ -4,10 +4,13 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, List, Tuple
+
+from .utilities import resolve_directory, DirType
 
 __all__ = [
-    'prep_plots'
+    'prep_plots',
+    'save_plots'
 ]
 
 
@@ -32,3 +35,27 @@ def prep_plots(figure_width: float = 6.0,
             plt.rcParams[key] = value
 
     return plt.subplots(constrained_layout=constrained_layout, **kwargs)
+
+
+def save_plots(fig: plt.Figure,
+               name: str,
+               subdir:  Optional[Union[List[str], str]] = None,
+               formats: List[Union[str, Tuple[str, Dict[str, Any]]]] = ['pdf',
+                                                                        'png'],
+               **kwargs):
+    # TODO: Document
+    out_dir = resolve_directory(DirType.FIGURES, subdir)
+    out_dir.mkdir(mode=0o755, parents=True, exist_ok=True)
+    for out_format in formats:
+        match out_format:
+            case str(extension):
+                out_file = out_dir / f'{name}.{extension}'
+                fig.savefig(out_file, **kwargs)
+            case (extension, subkwargs):
+                out_file = out_dir / f'{name}.{extension}'
+                args = {}
+                for key, value in kwargs.items():
+                    args[key] = value
+                for key, value in subkwargs.items():
+                    args[key] = value
+                fig.savefig(out_file, **args)
