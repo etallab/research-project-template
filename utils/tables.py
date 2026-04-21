@@ -18,13 +18,21 @@ __all__ = [ "get_styler",
             "generate_column_rules",
             "generate_partition_rules" ]
 
-def get_styler(df: Union[pd.DataFrame, pd.Series]) -> style.Styler:
+
+def get_styler(df: Union[pd.DataFrame, pd.Series],
+               thousands: Optional[str] = ',',
+               decimal: Optional[str] = ".",
+               precision: Optional[int] = 6) -> style.Styler:
     # TODO: Document
     if isinstance(df, pd.Series):
         df.to_frame().style
     else:
         styler = df.style
-    return styler.format(None, precision=decimals, thousands=thousands, escape='latex')
+    return styler.format(None, escape='latex',
+                         thousands=thousands,
+                         decimal=decimal,
+                         precision=precision)
+
 
 def highlight_cols(styler: style.Styler) -> style.Styler:
     # TODO: Document
@@ -156,8 +164,6 @@ def write_table(styler: style.Styler,
                 colsep: Optional[str] = None,
                 standalone: Union[str, bool] = False,
                 siunitx: bool = False,
-                thousands_sep: str = ",",
-                decimals: Optional[int] = 2,
                 **kwargs) -> str:
     output_file_dir = resolve_directory(DirType.TABLES)
     output_file_dir.mkdir(mode=0o755, parents=True, exist_ok=True)
@@ -166,15 +172,15 @@ def write_table(styler: style.Styler,
     if colsep:
         col_sep_prefix = re.sub(r'[0-9 _]', '', filename)
 
-    decimals = decimals if not siunitx else None
-
     with pd.option_context('max_colwidth', max_colwidth):
         styler = styler.format_index(None, escape='latex', axis='columns') \
                        .format_index(None, escape='latex', axis='index') \
-                       .set_table_styles([{'selector': 'toprule', 'props': ':toprule;'},
-                                          {'selector': 'bottomrule', 'props': ':bottomrule;'}],
+                       .set_table_styles([{'selector': 'toprule',
+                                           'props': ':toprule;'},
+                                          {'selector': 'bottomrule',
+                                           'props': ':bottomrule;'}],
                                          overwrite=False) \
-                       .format(escape='latex', thousands=thousands, decimals=decimals)
+
         table = styler.to_latex(siunitx=siunitx, **kwargs)
 
     if midrules is not None:
