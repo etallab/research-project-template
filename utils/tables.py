@@ -76,7 +76,7 @@ def _rule_from_spec(spec: RuleSpecifier) -> ConcreteRule:
     # TODO: Document
     match spec:
         case RuleLineIndex(row):
-            return (row, '\midrule')
+            return (row, '\\midrule')
         case (RuleLineIndex(row), RuleWidth(width)):
             return (row, f'\\midrule[{width}]')
         case (RuleLineIndex(row), list(specs)) | (RuleLineIndex(row), specs):
@@ -93,9 +93,9 @@ def _rule_from_spec(spec: RuleSpecifier) -> ConcreteRule:
 def generate_column_rules(df: pd.DataFrame, skip_index: bool=True, level: int=0, left_trim: TrimSpec=True, right_trim: TrimSpec=True) -> List[RuleSpecifier]:
     """Generate post-header rule for DF, including cut rules for the column groups at LEVEL.
 
-    If skip_index is False, simply return a specification for a regular \midrule after the column header(s).
+    If skip_index is False, simply return a specification for a regular \\midrule after the column header(s).
     Otherwise, generate an offset midrule or cmidrules for groups.
-    When grouping is performed, obey LEFT_TRIM and RIGHT_TRIM between \cmidrule s
+    When grouping is performed, obey LEFT_TRIM and RIGHT_TRIM between \\cmidrule s
     """
     index_cols = 1
     if isinstance(df.index, pd.MultiIndex):
