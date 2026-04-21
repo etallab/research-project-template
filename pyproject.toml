@@ -18,8 +18,17 @@ dependencies = [
 # TODO: Include author information
 authors = [ ]
 
+[project.optional-dependencies]
+dev = [
+"mypy~=1.19.1"
+]
+
 [tool.setuptools]
 include-package-data = false
+
+[tool.setuptools.packages.find]
+include = ["*"]
+
 
 [tool.mypy]
 warn_return_any = true

@@ -6,37 +6,44 @@
       url = "github:pyproject-nix/pyproject.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs =
-    { nixpkgs, pyproject-nix, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
+    { nixpkgs, pyproject-nix, ... }:
     let
+      inherit (nixpkgs) lib;
+      forAllSystems = lib.genAttrs lib.systems.flakeExposed;
+
       project = pyproject-nix.lib.project.loadPyproject {
         projectRoot = ./.;
       };
 
-      pkgs = nixpkgs.legacyPackages.${system};
-
-      python = pkgs.python3;
-
+      pythonAttr = "python3";
     in
     {
-      # Create a development shell containing dependencies from `pyproject.toml`
-      devShells.default =
-        let
-          arg = project.renderers.withPackages { inherit python; };
-          pythonEnv = python.withPackages arg;
+      devShells = forAllSystems
+        (system: {
+          default =
+            let
+              pkgs = nixpkgs.legacyPackages.${system};
+              python = pkgs.${pythonAttr};
+              pythonEnv = python.withPackages (project.renderers.withPackages { inherit python; extras = [ "dev" ]; });
+            in
+            pkgs.mkShell {
+              packages = [ pythonEnv ];
+            };
+        });
 
-        in
-        pkgs.mkShell { packages = [ pythonEnv ]; };
-
-      # Build our package using `buildPythonPackage
-      packages.default =
-        let
-          attrs = project.renderers.buildPythonPackage { inherit python; };
-        in
-        python.pkgs.buildPythonPackage (attrs);
-    });
+      packages = forAllSystems
+        (system: {
+          default =
+            let
+              pkgs = nixpkgs.legacyPackages.${system};
+              python = pkgs.${pythonAttr};
+            in
+            {
+              default = python.pkgs.buildPythonPackage (project.renderers.buildPythonPackage { inherit python; });
+            };
+        });
+    };
 }

@@ -7,6 +7,7 @@
 !.gitmodules
 !.gitkeep
 !.dir-locals.el
+/result/
 
 # Emacs Stuff
 *~
