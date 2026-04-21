@@ -20,7 +20,9 @@ authors = [ ]
 
 [project.optional-dependencies]
 dev = [
-"mypy~=1.19.1"
+"mypy~=1.19.1",
+"jedi~=0.19.2",
+"python-lsp-server[yapf,pycodestyle,rope,pyflakes,mccabe]~=1.14.0"
 ]
 
 [tool.setuptools]
