@@ -3,7 +3,7 @@
 
 import pandas as pd
 
-from typing import Callable, List, Optional
+from typing import Callable, List, Optional, Union
 
 from .utilities import DirType, resolve_directory
 
@@ -22,7 +22,7 @@ def get_dataframe(filename: str,
     try:
         df = pd.read_parquet(cache_file_name)
     except:
-        df = pd.read_csv(csv_file_name)
+        df = pd.read_csv(csv_file_name, **kwargs)
         if drop_columns:
             df = df.drop(drop_columns, axis=1)
         if drop_rows:
