@@ -5,7 +5,7 @@ from pathlib import Path
 from enum import StrEnum
 import os
 
-from typing import Optional
+from typing import List, Optional, Union
 
 __all__ = [ 'resolve_directory', 'DirType' ]
 
