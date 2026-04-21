@@ -10,6 +10,7 @@ __all__ = [
     'prep_plots'
 ]
 
+
 def prep_plots(figure_width: float = 6.0,
                figure_height: float = 5.0,
                dpi: float = 600.0,
@@ -26,11 +27,8 @@ def prep_plots(figure_width: float = 6.0,
     plt.rcParams['figure.dpi'] = dpi
     plt.rcParams['font.size'] = fontsize
 
-    if rcParam:
+    if rcParams:
         for key, value in rcParams.items():
             plt.rcParams[key] = value
-
-    if 'constrained_layout' not in kwargs:
-        kwargs['constrained_layout'] = True
 
     return plt.subplots(constrained_layout=constrained_layout, **kwargs)
