@@ -1,0 +1,17 @@
+# TODO: Update: See also https://github.com/citation-file-format/citation-file-format/blob/main/schema-guide.md
+
+cff-version: 1.2.0
+message: If you use this software, please cite it using these metadata.
+title: My Research Software
+abstract: This is my awesome research software. It does many things.
+authors:
+  - family-names: Flint
+    given-names: Samuel W.
+    orcid: "https://orcid.org/0000-0002-8023-9710"
+date-released: "2021-07-18"
+identifiers:
+  - description: This is the collection of archived snapshots of all versions of My Research Software
+    type: doi
+    value: "10.5281/zenodo.123456"
+license: BSD-3-Clause             # TODO: Set this appropriately
+repository-code: "https://github.com/etallab/TODO"

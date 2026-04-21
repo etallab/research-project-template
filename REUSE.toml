@@ -1,0 +1,19 @@
+version = 1
+SPDX-PackageName = "TODO"
+SPDX-PackageSupplier = "TODO"
+SPDX-PackageDownloadLocation = "https://github.com/etallab/TODO"
+
+[[annotations]]
+path = [ "flake.nix", "pyproject.toml", "CITATION.cff" ]
+SPDX-FileCopyrightText = "2026 TODO"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "data/**/*"
+SPDX-FileCopyrightText = "2026 TODO"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "src/**"
+SPDX-FileCopyrightText = "2026 TODO"
+SPDX-License-Identifier = "BSD-3-Clause"
