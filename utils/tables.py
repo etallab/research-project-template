@@ -11,12 +11,12 @@ from typing import Optional, Union, List, Tuple
 
 from .utilities import resolve_directory, DirType
 
-__all__ = [ "get_styler",
-            "highlight_cols",
-            "highlight_rows",
-            "write_table",
-            "generate_column_rules",
-            "generate_partition_rules" ]
+__all__ = ["get_styler",
+           "highlight_cols",
+           "highlight_rows",
+           "write_table",
+           "generate_column_rules",
+           "generate_partition_rules"]
 
 
 def get_styler(df: Union[pd.DataFrame, pd.Series],
@@ -51,9 +51,11 @@ RuleWidth = str
 TrimSpec = Union[bool, RuleWidth]
 CmidruleSpec = Tuple[int, int, TrimSpec, TrimSpec]
 RuleSpecifier = Union[RuleLineIndex,
-                       Tuple[RuleLineIndex, RuleWidth],
-                       Tuple[RuleLineIndex, Union[CmidruleSpec, List[CmidruleSpec]]]]
+                      Tuple[RuleLineIndex, RuleWidth],
+                      Tuple[RuleLineIndex,
+                            Union[CmidruleSpec, List[CmidruleSpec]]]]
 ConcreteRule = Tuple[RuleLineIndex, str]
+
 
 def _trim_spec(trim_left: TrimSpec, trim_right: TrimSpec) -> str:
     # TODO: Document
@@ -72,6 +74,7 @@ def _trim_spec(trim_left: TrimSpec, trim_right: TrimSpec) -> str:
     else:
         return ''
 
+
 def _rule_from_spec(spec: RuleSpecifier) -> ConcreteRule:
     # TODO: Document
     match spec:
@@ -89,6 +92,7 @@ def _rule_from_spec(spec: RuleSpecifier) -> ConcreteRule:
         case _:
             print(f"Rule {spec!r} is invalid.", file=sys.err)
             return (-1, "Unhandled case")
+
 
 def generate_column_rules(df: pd.DataFrame, skip_index: bool=True, level: int=0, left_trim: TrimSpec=True, right_trim: TrimSpec=True) -> List[RuleSpecifier]:
     """Generate post-header rule for DF, including cut rules for the column groups at LEVEL.
@@ -126,6 +130,7 @@ def generate_column_rules(df: pd.DataFrame, skip_index: bool=True, level: int=0,
 
         return [(df.columns.nlevels, cmidrules)]
 
+
 def generate_partition_rules(df: pd.DataFrame, skip_index: bool=False, level: int=0) -> List[RuleSpecifier]:
     """Generate post-row-group rules for DF for row-groups at LEVEL.
 
@@ -162,7 +167,8 @@ def write_table(styler: style.Styler,
                 filename: str,
                 subdir: Optional[Union[List[str], str]] = None,
                 max_colwidth: int = 1000,
-                midrules: Optional[Union[Rule_Specifier], List[Rule_Specifier]] = None,
+                midrules: Optional[Union[RuleSpecifier,
+                                         List[RuleSpecifier]]] = None,
                 colsep: Optional[str] = None,
                 standalone: Union[str, bool] = False,
                 siunitx: Optional[Union[str, bool]] = False,
