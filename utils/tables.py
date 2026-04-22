@@ -209,7 +209,7 @@ def write_table(styler: style.Styler,
         if standalone:
             f.write("\\documentclass[border=0.2cm%s]{standalone}\n\n" % ((",%s"% standalone ) if isinstance(standalone, str) else ""))
             f.write("\\usepackage{booktabs}\n")
-            f.write("\\usepackage[table]{xcolor}")
+            f.write("\\usepackage[table]{xcolor}\n")
             if siunitx:
                 f.write("\\usepackage{siunitx}\n")
                 f.write("\\usepackage{etoolbox}\n")
