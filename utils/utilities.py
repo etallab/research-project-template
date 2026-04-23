@@ -7,34 +7,47 @@ import os
 
 from typing import List, Optional, Union
 
-__all__ = [ 'resolve_directory',
-            'DirType',
-            'ROOT_DIR',
-            'DATA_DIR',
-            'CACHE_DIR',
-            'RAW_DIR',
-            'CSV_DIR',
-            'OUT_DIR',
-            'FIGURES_DIR',
-            'TABLES_DIR' ]
+__all__ = [
+    'resolve_directory',
+    'DirType',
+    'ROOT_DIR',
+    'DATA_DIR',
+    'CACHE_DIR',
+    'RAW_DIR',
+    'CSV_DIR',
+    'OUT_DIR',
+    'FIGURES_DIR',
+    'TABLES_DIR'
+]
 
-def _get_default_root():
+
+def _get_default_root() -> Path:
     current_file = Path(__file__).resolve()
     for parent in current_file.parents:
         if (parent / "pyproject.toml").exists():
             return parent
-    raise FileNotFoundError(f"Unable to find project root relative to {__file__}.")
+    raise FileNotFoundError('Unable to find project root relative to "%s".' \
+                            % (__file__))
 
-ROOT_DIR = Path(os.environ.get("ROOT_DIR", _get_default_root())).resolve()
 
-DATA_DIR = Path(os.environ.get("CACHE_DIR", ROOT_DIR / 'data' )).resolve()
-CACHE_DIR = Path(os.environ.get("CACHE_DIR", ROOT_DIR / 'data' / 'cache')).resolve()
-RAW_DIR = Path(os.environ.get("RAW_DIR", ROOT_DIR / 'data' / 'raw')).resolve()
-CSV_DIR = Path(os.environ.get("CSV_DIR", ROOT_DIR / 'data' / 'csv')).resolve()
+ROOT_DIR = Path(os.environ.get("ROOT_DIR", _get_default_root())) \
+    .resolve()
 
-OUT_DIR = Path(os.environ.get("OUT_DIR", ROOT_DIR / 'out')).resolve()
-FIGURES_DIR = Path(os.environ.get("FIGURES_DIR", OUT_DIR / 'figures')).resolve()
-TABLES_DIR = Path(os.environ.get("TABLES_DIR", OUT_DIR / 'tables')).resolve()
+DATA_DIR = Path(os.environ.get("CACHE_DIR", ROOT_DIR / 'data')) \
+    .resolve()
+CACHE_DIR = Path(os.environ.get("CACHE_DIR", ROOT_DIR / 'data' / 'cache')) \
+    .resolve()
+RAW_DIR = Path(os.environ.get("RAW_DIR", ROOT_DIR / 'data' / 'raw')) \
+    .resolve()
+CSV_DIR = Path(os.environ.get("CSV_DIR", ROOT_DIR / 'data' / 'csv')) \
+    .resolve()
+
+OUT_DIR = Path(os.environ.get("OUT_DIR", ROOT_DIR / 'out')) \
+    .resolve()
+FIGURES_DIR = Path(os.environ.get("FIGURES_DIR", OUT_DIR / 'figures')) \
+    .resolve()
+TABLES_DIR = Path(os.environ.get("TABLES_DIR", OUT_DIR / 'tables')) \
+    .resolve()
 
 
 class DirType(StrEnum):
@@ -44,7 +57,9 @@ class DirType(StrEnum):
     FIGURES = 'figs'
     TABLES = 'tables'
 
-def resolve_directory(dir_type: DirType, subdir: Optional[Union[List[str], str]] = None) -> Path:
+
+def resolve_directory(dir_type: DirType,
+                      subdir: Optional[Union[List[str], str]] = None) -> Path:
     directory = None
     match dir_type:
         case DirType.DATA_CACHE:
