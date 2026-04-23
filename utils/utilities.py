@@ -63,7 +63,9 @@ DIRS[DirType.TABLES] = Path(os.environ.get("TABLES_DIR",
 
 
 def resolve_directory(dir_type: DirType,
-                      subdir: Optional[Union[List[str], str]] = None) -> Path:
+                      subdir: Optional[Union[List[str], str]] = None,
+                      ensure_exists: bool = True) -> Path:
+    # TODO: Document
     directory = DIRS[dir_type]
 
     if isinstance(subdir, str):
@@ -72,4 +74,6 @@ def resolve_directory(dir_type: DirType,
         for sub in subdir:
             directory = directory / sub
 
+    if ensure_exists:
+        directory.mkdir(0o755, parents=True, exist_ok=True)
     return directory
