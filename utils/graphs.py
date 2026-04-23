@@ -45,7 +45,6 @@ def save_plots(fig: plt.Figure,
                **kwargs):
     # TODO: Document
     out_dir = resolve_directory(DirType.FIGURES, subdir)
-    out_dir.mkdir(mode=0o755, parents=True, exist_ok=True)
     for out_format in formats:
         match out_format:
             case str(extension):

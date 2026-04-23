@@ -34,7 +34,6 @@ def get_dataframe(filename: str,
         if precache_function:
             df = precache_function(df)
 
-        cache_dir.mkdir(mode=0o755, parents=True, exist_ok=True)
         df.to_parquet(cache_file_name, compression='gzip')
 
     return df
