@@ -5,19 +5,11 @@ from pathlib import Path
 from enum import StrEnum
 import os
 
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Dict
 
 __all__ = [
     'resolve_directory',
-    'DirType',
-    'ROOT_DIR',
-    'DATA_DIR',
-    'CACHE_DIR',
-    'RAW_DIR',
-    'CSV_DIR',
-    'OUT_DIR',
-    'FIGURES_DIR',
-    'TABLES_DIR'
+    'DirType'
 ]
 
 
@@ -30,48 +22,49 @@ def _get_default_root() -> Path:
                             % (__file__))
 
 
-ROOT_DIR = Path(os.environ.get("ROOT_DIR", _get_default_root())) \
-    .resolve()
-
-DATA_DIR = Path(os.environ.get("CACHE_DIR", ROOT_DIR / 'data')) \
-    .resolve()
-CACHE_DIR = Path(os.environ.get("CACHE_DIR", ROOT_DIR / 'data' / 'cache')) \
-    .resolve()
-RAW_DIR = Path(os.environ.get("RAW_DIR", ROOT_DIR / 'data' / 'raw')) \
-    .resolve()
-CSV_DIR = Path(os.environ.get("CSV_DIR", ROOT_DIR / 'data' / 'csv')) \
-    .resolve()
-
-OUT_DIR = Path(os.environ.get("OUT_DIR", ROOT_DIR / 'out')) \
-    .resolve()
-FIGURES_DIR = Path(os.environ.get("FIGURES_DIR", OUT_DIR / 'figures')) \
-    .resolve()
-TABLES_DIR = Path(os.environ.get("TABLES_DIR", OUT_DIR / 'tables')) \
-    .resolve()
-
-
 class DirType(StrEnum):
+    ROOT = 'ROOT'
+    DATA = 'DATA'
     DATA_CACHE = 'cache'
     DATA_RAW = 'raw'
     DATA_CSV = 'csv'
+    OUT = 'OUT'
     FIGURES = 'figs'
     TABLES = 'tables'
 
 
+DIRS: Dict[DirType, Path] = {}
+
+DIRS[DirType.ROOT] = Path(os.environ.get("ROOT_DIR", _get_default_root())) \
+    .resolve()
+
+DIRS[DirType.DATA] = Path(os.environ.get("DATA_DIR",
+                                         DIRS[DirType.ROOT] / 'data')) \
+    .resolve()
+DIRS[DirType.DATA_CACHE] = Path(os.environ.get("CACHE_DIR",
+                                               DIRS[DirType.DATA] / 'cache')) \
+    .resolve()
+DIRS[DirType.DATA_RAW] = Path(os.environ.get("RAW_DIR",
+                                             DIRS[DirType.ROOT] / 'raw')) \
+    .resolve()
+DIRS[DirType.DATA_CSV] = Path(os.environ.get("CSV_DIR",
+                                             DIRS[DirType.ROOT] / 'csv')) \
+    .resolve()
+
+DIRS[DirType.OUT] = Path(os.environ.get("OUT_DIR",
+                                        DIRS[DirType.ROOT] / 'out')) \
+    .resolve()
+DIRS[DirType.FIGURES] = Path(os.environ.get("FIGURES_DIR",
+                                            DIRS[DirType.OUT] / 'figures')) \
+    .resolve()
+DIRS[DirType.TABLES] = Path(os.environ.get("TABLES_DIR",
+                                           DIRS[DirType.OUT] / 'tables')) \
+    .resolve()
+
+
 def resolve_directory(dir_type: DirType,
                       subdir: Optional[Union[List[str], str]] = None) -> Path:
-    directory = None
-    match dir_type:
-        case DirType.DATA_CACHE:
-            directory = CACHE_DIR
-        case DirType.DATA_RAW:
-            directory = RAW_DIR
-        case DirType.DATA_CSV:
-            directory = CSV_DIR
-        case DirType.FIGURES:
-            directory = FIGURES_DIR
-        case DirType.TABLES:
-            directory = TABLES_DIR
+    directory = DIRS[dir_type]
 
     if isinstance(subdir, str):
         directory = directory / subdir
